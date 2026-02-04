@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login EMPERIOR</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Share+Tech+Mono&display=swap');
+
+:root {
+  --bg-dark:#020814;
+  --bg-gradient:radial-gradient(circle at top,#0a2a4f,#020814 65%);
+  --accent-light:#38bdf8;
+  --accent-dark:#2563eb;
+  --accent-green:#22c55e;
+  --accent-red:#ef4444;
+  --text-white:#eaf4ff;
+  --font-title:'Orbitron', sans-serif;
+  --font-code:'Share Tech Mono', monospace;
+}
+
+/* Reset & Body */
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  width:100%;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:var(--bg-gradient);
+  font-family:var(--font-code);
+  color:var(--text-white);
+  overflow:hidden;
+  position:relative;
+}
+
+/* Particles */
+.particle{
+  position:absolute;
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:var(--accent-light);
+  opacity:0.3;
+  animation:float linear infinite;
+}
+@keyframes float{0%{transform:translateY(0)}100%{transform:translateY(-100vh)}}
+
+/* Login Card */
+.login-card{
+  position:relative;
+  width:360px;
+  padding:30px 25px;
+  border-radius:20px;
+  background:rgba(2,8,20,0.9);
+  box-shadow:0 10px 30px rgba(0,0,0,0.7);
+  text-align:center;
+  z-index:5;
+  animation:fadeIn 1s ease forwards;
+}
+
+/* Titles */
+.login-card h1{
+  font-family:var(--font-title);
+  font-size:2rem;
+  margin-bottom:5px;
+  color:var(--accent-light);
+  text-shadow:0 0 10px rgba(56,189,248,0.5);
+}
+.login-card p{
+  font-size:0.85rem;
+  margin-bottom:20px;
+  color:var(--text-white);
+  opacity:0.8;
+}
+
+/* Profile Photo */
+.profile-img{
+  width:90px;
+  height:90px;
+  border-radius:50%;
+  background:url('https://files.catbox.moe/npkjw9.jpg') center/cover no-repeat;
+  margin:10px auto;
+  border:3px solid var(--accent-light);
+  box-shadow:0 0 20px var(--accent-light);
+}
+
+/* Input Fields */
+.login-card input{
+  width:100%;
+  padding:12px 15px;
+  margin:10px 0;
+  border-radius:12px;
+  border:1px solid rgba(56,189,248,0.45);
+  background:#020814;
+  color:#fff;
+  font-size:0.9rem;
+  transition:0.3s;
+}
+.login-card input:focus{border-color:var(--accent-light);box-shadow:0 0 15px var(--accent-light);}
+.login-card input.error{border-color:var(--accent-red); animation:shake 0.4s cubic-bezier(.36,.07,.19,.97) both;}
+@keyframes shake{
+  10%,90%{transform:translateX(-1px)}20%,80%{transform:translateX(2px)}
+  30%,50%,70%{transform:translateX(-4px)}40%,60%{transform:translateX(4px)}
+}
+
+/* Buttons */
+.login-card button{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:12px;
+  margin-top:10px;
+  font-family:var(--font-title);
+  font-weight:700;
+  background:linear-gradient(135deg,var(--accent-light),var(--accent-dark));
+  color:#000;
+  cursor:pointer;
+  transition:0.3s;
+}
+.login-card button:hover{transform:translateY(-3px);box-shadow:0 8px 25px rgba(56,189,248,0.5);}
+.login-card button:active{transform:scale(0.97);}
+
+/* Contact Dev */
+.contact-dev{
+  margin-top:15px;
+  display:inline-block;
+  color:var(--accent-light);
+  font-size:0.8rem;
+  text-decoration:none;
+  border:1px solid var(--accent-light);
+  padding:5px 10px;
+  border-radius:12px;
+  transition:0.3s;
+}
+.contact-dev:hover{background:var(--accent-light);color:#020814;}
+
+/* Time & Date */
+.profile-time{
+  margin-top:10px;
+  font-size:0.75rem;
+  opacity:0.7;
+}
+
+/* Visualizer */
+.visualizer{
+  display:flex;
+  justify-content:center;
+  gap:3px;
+  margin-top:15px;
+}
+.bar{
+  width:4px;
+  height:5px;
+  background:var(--accent-light);
+  border-radius:2px;
+  animation: bounce 1.2s infinite ease-in-out;
+}
+.bar:nth-child(odd){background:var(--accent-dark);}
+@keyframes bounce{
+  0%,100%{height:5px;opacity:0.5}
+  50%{height:20px;opacity:1}
+}
+
+/* Fade In */
+@keyframes fadeIn{0%{opacity:0;transform:translateY(-20px)}100%{opacity:1;transform:translateY(0)}}
+
+/* Toast */
+.toast{
+  position:fixed;
+  top:20px;
+  left:50%;
+  transform:translateX(-50%);
+  padding:14px 22px;
+  border-radius:16px;
+  font-weight:900;
+  opacity:0;
+  transition:0.5s;
+  z-index:10;
+}
+.toast.show{opacity:1}
+.toast.success{background:var(--accent-green);color:#020814;}
+.toast.error{background:var(--accent-red);color:#fff;}
+</style>
+</head>
+<body>
+
+<!-- Particles -->
+<script>
+for(let i=0;i<50;i++){
+  let p=document.createElement('div');
+  p.className='particle';
+  p.style.left=Math.random()*100+'vw';
+  p.style.width=p.style.height=(5+Math.random()*5)+'px';
+  p.style.animationDuration=(5+Math.random()*5)+'s';
+  document.body.appendChild(p);
+}
+</script>
+
+<!-- Login Card -->
+<div class="login-card">
+  <div class="profile-img"></div>
+  <h1>EMPERIOR</h1>
+  <p>Welcome to the Dilan Project</p>
+  <input type="text" id="username" placeholder="Username">
+  <input type="password" id="password" placeholder="Password">
+  <button id="loginBtn">Log In</button>
+  <div class="profile-time" id="timeDate"></div>
+  <div class="visualizer">
+    <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+    <div class="bar"></div><div class="bar"></div>
+  </div>
+  <a href="https://t.me/dilanalow" target="_blank" class="contact-dev">Contact Dev</a>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toastMsg"></div>
+
+<!-- Music -->
+<audio id="bgMusic" loop>
+  <source src="https://files.catbox.moe/6hkktg.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+// Music autoplay after first interaction
+const music=document.getElementById('bgMusic');
+document.body.addEventListener('click',()=>{if(music.paused) music.play();},{once:true});
+
+// Time & Date
+function updateTime(){
+  const now=new Date();
+  const h=now.getHours().toString().padStart(2,'0');
+  const m=now.getMinutes().toString().padStart(2,'0');
+  const s=now.getSeconds().toString().padStart(2,'0');
+  const d=now.getDate().toString().padStart(2,'0');
+  const mo=(now.getMonth()+1).toString().padStart(2,'0');
+  const y=now.getFullYear();
+  document.getElementById('timeDate').innerText=`${h}:${m}:${s} - ${d}/${mo}/${y}`;
+}
+setInterval(updateTime,1000);
+updateTime();
+
+// Toast
+function showToast(msg,type){
+  const t=document.getElementById('toastMsg');
+  t.innerText=msg;
+  t.className='toast show '+type;
+  setTimeout(()=>t.className='toast',2000);
+}
+
+// Login
+document.getElementById('loginBtn').addEventListener('click',()=>{
+  const u=document.getElementById('username');
+  const p=document.getElementById('password');
+  const validUser='dilan';
+  const validPass='12345';
+  if(u.value!==validUser||p.value!==validPass){
+    u.classList.add('error'); p.classList.add('error');
+    showToast('Login gagal!','error');
+    setTimeout(()=>{u.classList.remove('error');p.classList.remove('error');},400);
+    return;
+  }
+  showToast('Login berhasil!','success');
+  setTimeout(()=>{window.location.href='index.html';},1000);
+});
+</script>
+</body>
+</html>
