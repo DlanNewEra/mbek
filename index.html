@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DILAN FRIENDS</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  font-family:Inter,system-ui;
+  background:radial-gradient(circle at top,#0a2a4f,#020814 65%);
+  color:#eaf4ff;
+  overflow-x:hidden;
+}
+
+/* HEADER */
+.header{
+  height:56px;
+  background:linear-gradient(180deg,#081f3f,#020814);
+  display:flex;
+  align-items:center;
+  padding:0 14px;
+  box-shadow:0 0 30px #38bdf855;
+  position:sticky;
+  top:0;
+  z-index:50;
+}
+.burger{font-size:22px;cursor:pointer}
+.title{font-weight:900}
+.subtitle{font-size:11px;opacity:.6}
+
+/* PROFILE BUTTON */
+.profile-btn{
+  margin-left:auto;
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  background:url('https://files.catbox.moe/npkjw9.jpg') center/cover no-repeat;
+  border:2px solid #38bdf8;
+  cursor:pointer;
+  transition:0.3s;
+}
+.profile-btn:hover{transform:scale(1.1);}
+
+/* APP */
+.app{max-width:420px;margin:auto;padding-bottom:60px}
+
+/* CARD */
+.card{
+  position:relative;
+  margin:12px 14px;
+  border-radius:18px;
+  padding:16px;
+  background:linear-gradient(180deg,#0b2a4a,#06152c);
+  border:1px solid rgba(56,189,248,.45);
+  box-shadow:0 0 40px rgba(56,189,248,.35);
+  overflow:hidden;
+}
+
+/* SECTION */
+.section{font-weight:900;color:#7dd3fc;margin-bottom:8px}
+
+/* ROW */
+.row,.stat{
+  display:flex;
+  justify-content:space-between;
+  padding:7px 0;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+.row:last-child,.stat:last-child{border:none}
+.active{color:#22c55e;font-weight:900}
+
+/* INPUT */
+input,select{
+  width:100%;
+  height:44px;
+  border-radius:14px;
+  border:1px solid rgba(56,189,248,.45);
+  background:#020814;
+  color:#fff;
+  padding:0 14px;
+  margin-bottom:10px;
+  transition:0.3s;
+}
+input:focus, select:focus{border-color:#38bdf8; box-shadow:0 0 12px #38bdf8;}
+input.error,select.error{border-color:#ef4444;animation:shake 0.4s cubic-bezier(.36,.07,.19,.97) both;}
+@keyframes shake{
+  10%,90%{transform:translateX(-1px)}20%,80%{transform:translateX(2px)}
+  30%,50%,70%{transform:translateX(-4px)}40%,60%{transform:translateX(4px)}
+}
+
+/* BUTTON */
+button{
+  width:100%;
+  height:44px;
+  border-radius:14px;
+  border:none;
+  font-weight:900;
+  background:linear-gradient(135deg,#38bdf8,#2563eb);
+  margin-bottom:8px;
+  cursor:pointer;
+  transition:0.3s;
+}
+button:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(56,189,248,.5);}
+.btn-outline{
+  background:transparent;
+  border:1.5px solid #38bdf8;
+  color:#7dd3fc;
+}
+
+/* SIDEBAR */
+.sidebar{
+  position:fixed;
+  top:0;left:-260px;
+  width:260px;height:100%;
+  background:#020814;
+  transition:.35s;
+  z-index:100;
+  padding:14px;
+}
+.sidebar.active{left:0}
+.sidebar a{
+  display:block;
+  padding:10px 0;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  color:#cfe9ff;
+  cursor:pointer;
+}
+.sidebar .list{
+  font-size:12px;
+  opacity:.7;
+  padding:6px 0;
+}
+.sidebar .logout{
+  color:#ef4444;
+  font-weight:900;
+  margin-top:20px;
+}
+
+/* OVERLAY */
+.overlay-bg{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.65);
+  opacity:0;
+  pointer-events:none;
+  transition:.3s;
+  z-index:90;
+}
+.overlay-bg.show{opacity:1;pointer-events:auto}
+
+/* MODAL */
+.modal{
+  position:fixed;
+  inset:0;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:rgba(0,0,0,.7);
+  opacity:0;
+  pointer-events:none;
+  transition:.3s;
+  z-index:120;
+}
+.modal.show{opacity:1;pointer-events:auto}
+.modal .box{
+  width:90%;
+  max-width:360px;
+  border-radius:20px;
+  padding:16px;
+  background:#020814;
+}
+.modal .box .profile-img{
+  width:90px;height:90px;border-radius:50%;background:url('https://files.catbox.moe/npkjw9.jpg') center/cover no-repeat;margin:0 auto 10px;border:3px solid #38bdf8;}
+.close{text-align:right;cursor:pointer;font-size:20px;color:#7dd3fc;}
+
+/* TOAST */
+.toast{
+  position:fixed;
+  bottom:-100px;
+  left:50%;
+  transform:translateX(-50%) scale(0.5);
+  padding:14px 22px;
+  border-radius:16px;
+  font-weight:900;
+  transition:.5s ease, transform .3s ease;
+  z-index:200;
+  opacity:0;
+}
+.toast.show{
+  bottom:30px;
+  opacity:1;
+  transform:translateX(-50%) scale(1);
+}
+.toast.success{background:#22c55e;color:#022c22;}
+.toast.info{background:#38bdf8;color:#020814;}
+.toast.error{background:#ef4444;color:#fff;}
+
+/* WELCOME SLIDER */
+.welcome{height:170px;padding:0;position:relative;overflow:hidden;border-radius:18px}
+.slides{
+  display:flex;
+  width:200%;
+  height:100%;
+  animation:slideRight 8s infinite ease-in-out;
+}
+.slide{
+  width:50%;
+  height:100%;
+  background-size:cover;
+  background-position:center;
+}
+@keyframes slideRight{
+  0%,45%{transform:translateX(0)}
+  55%,95%{transform:translateX(-50%)}
+  100%{transform:translateX(0)}
+}
+.welcome-text{
+  position:absolute;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  padding:16px;
+  background:linear-gradient(to top,rgba(2,8,20,.85),transparent);
+}
+.welcome-text h2{margin:0;color:#7dd3fc}
+.welcome-text p{margin:4px 0 0;font-size:12px}
+
+/* MUSIC VISUALIZER */
+.visualizer{
+  display:flex;
+  justify-content:center;
+  gap:3px;
+  margin-top:10px;
+}
+.bar{
+  width:4px;
+  height:5px;
+  background:#38bdf8;
+  border-radius:2px;
+  animation: bounce 1.2s infinite ease-in-out;
+}
+.bar:nth-child(odd){background:#2563eb;}
+@keyframes bounce{
+  0%,100%{height:5px;opacity:0.5}
+  50%{height:20px;opacity:1}
+}
+</style>
+</head>
+<body>
+
+<!-- TOAST -->
+<div class="toast success" id="toastAdd">✅ Nomor ditambahkan</div>
+<div class="toast info" id="toastCreate">🎉 User berhasil dibuat</div>
+<div class="toast success" id="toastDelete">🗑 Nomor dihapus</div>
+<div class="toast success" id="toastPass">🔐 Password diganti</div>
+<div class="toast error" id="toastError">⚠️ Input tidak boleh kosong</div>
+<div class="toast info" id="toastLogout">🚪 Logout berhasil</div>
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="side">
+  <a>🏠 Menu Utama</a>
+  <a onclick="openProfile()">👤 Profil</a>
+  <a>💻 Developer</a>
+  <a>❤️ Credit</a>
+  <div id="userList">
+    <div class="list">raffi (pt prib)</div>
+    <div class="list">razzy (pt prib)</div>
+    <div class="list">rulz (pt prib)</div>
+    <div class="list">vinxbot (pt prib)</div>
+  </div>
+  <a class="logout" onclick="logout()">↩ Log Out</a>
+</div>
+<div class="overlay-bg" id="ov" onclick="toggleSide()"></div>
+
+<!-- PROFILE MODAL -->
+<div class="modal" id="modal">
+  <div class="box">
+    <div class="profile-img"></div>
+    <div class="close" onclick="closeProfile()">✕</div>
+    <div class="row"><span>Username</span><b>dilan</b></div>
+    <div class="row"><span>Role</span><b>DEVELOPER</b></div>
+    <input id="newPass" placeholder="Password baru">
+    <button onclick="changePassword()">Ganti Password</button>
+    <button style="background:#ef4444;color:#fff" onclick="logout()">🚪 Logout</button>
+  </div>
+</div>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="burger" onclick="toggleSide()">☰</div>
+  <div style="margin-left:10px">
+    <div class="title">DILAN FRIENDS</div>
+    <div class="subtitle">Preview</div>
+  </div>
+  <div class="profile-btn" onclick="openProfile()"></div>
+</div>
+
+<div class="app">
+  <!-- WELCOME SLIDER -->
+  <div class="card welcome">
+    <div class="slides">
+      <div class="slide" style="background-image:url('https://files.catbox.moe/s4zohm.jpg')"></div>
+      <div class="slide" style="background-image:url('https://files.catbox.moe/ucl2d9.jpg')"></div>
+    </div>
+    <div class="welcome-text">
+      <h2>Welcome, dilan</h2>
+      <p>Thank you for being part of the Dilan Project</p>
+    </div>
+  </div>
+
+  <!-- USER INFO -->
+  <div class="card">
+    <div class="section">User Info</div>
+    <div class="row"><span>Username</span><b>dilan</b></div>
+    <div class="row"><span>Role</span><b>DEVELOPER</b></div>
+    <div class="row"><span>Status</span><b class="active">● Active</b></div>
+  </div>
+
+  <!-- MANAGE NOMOR -->
+  <div class="card">
+    <div class="section">Manage Nomor</div>
+    <input id="no" placeholder="Nomor (628...)">
+    <button onclick="addNumber()">Tambah Nomor</button>
+    <button onclick="deleteNumber()">Hapus Nomor</button>
+    <div class="visualizer">
+      <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+      <div class="bar"></div><div class="bar"></div>
+    </div>
+  </div>
+
+  <!-- CREATE USER -->
+  <div class="card">
+    <div class="section">Create User</div>
+    <input id="user" placeholder="Username baru">
+    <input id="pass" placeholder="Password baru">
+    <select id="role">
+      <option value="">Pilih Role</option>
+      <option>Partner Pribadi</option>
+      <option>Reseller</option>
+    </select>
+    <button onclick="createUser()">Create</button>
+  </div>
+
+  <!-- STATISTICS -->
+  <div class="card">
+    <div class="section">Statistics</div>
+    <div class="stat"><span>Total Reseller SC</span><b>0</b></div>
+    <div class="stat"><span>Total Partner SC</span><b>0</b></div>
+    <div class="stat"><span>Total Tangan Kanan</span><b>0</b></div>
+    <div class="stat"><span>Total Partner Pribadi</span><b>1</b></div>
+  </div>
+
+  <!-- ACCESS & SCRIPT -->
+  <div class="card">
+    <div class="section">Access & Script</div>
+    <button class="btn-outline">🔓 BUY ACCESS</button>
+    <button class="btn-outline">⬇ DOWNLOAD EMPERIOR V4</button>
+  </div>
+</div>
+
+<!-- MUSIC -->
+<audio id="bgMusic" loop>
+  <source src="https://files.catbox.moe/6hkktg.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const side=document.getElementById("side");
+const ov=document.getElementById("ov");
+const modal=document.getElementById("modal");
+const userList=document.getElementById("userList");
+const music=document.getElementById("bgMusic");
+
+// MUSIC autoplay after first click (required browser policy)
+document.body.addEventListener('click',()=>{if(music.paused) music.play();},{once:true});
+
+// TOAST FUNCTION
+function showToast(id){
+  const t=document.getElementById(id);
+  t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"),2000);
+}
+
+// SIDEBAR
+function toggleSide(){side.classList.toggle("active"); ov.classList.toggle("show");}
+
+// MODAL
+function openProfile(){modal.classList.add("show")}
+function closeProfile(){modal.classList.remove("show")}
+modal.onclick=function(e){if(e.target===this) closeProfile()}
+
+// ERROR INPUT
+function errorInput(el){el.classList.add("error"); showToast("toastError"); setTimeout(()=>el.classList.remove("error"),400);}
+
+// MANAGE NOMOR
+function addNumber(){const n=document.getElementById("no");if(!n.value)return errorInput(n); showToast("toastAdd"); n.value="";}
+function deleteNumber(){const n=document.getElementById("no");if(!n.value)return errorInput(n); showToast("toastDelete"); n.value="";}
+
+// CREATE USER
+function createUser(){
+  const u=document.getElementById("user"); const p=document.getElementById("pass"); const r=document.getElementById("role");
+  if(!u.value)return errorInput(u); if(!p.value)return errorInput(p); if(!r.value)return errorInput(r);
+  const div=document.createElement("div"); div.className="list"; div.innerText=`${u.value} (${r.value})`; userList.appendChild(div);
+  showToast("toastCreate"); u.value="";p.value="";r.value="";
+}
+
+// CHANGE PASSWORD
+function changePassword(){const p=document.getElementById("newPass"); if(!p.value)return errorInput(p); showToast("toastPass"); p.value=""; closeProfile();}
+
+// LOGOUT
+function logout(){
+  closeProfile(); // tutup modal
+  toggleSide();   // tutup sidebar
+  showToast("toastLogout"); // animasi toast
+  setTimeout(() => {
+    window.location.href = 'login.html'; // ganti ke nama file login kamu
+  }, 800); // delay biar toast muncul dulu
+}
+</script>
+</body>
+  </html>
